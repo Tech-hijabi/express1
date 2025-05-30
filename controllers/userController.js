@@ -4,7 +4,13 @@ const User = require('../models/userSchema')
 
 
 const createUserAccount = async (req, res) => {
+    const { username, email, password } = req.body
+
     try {
+        const returnedemail = await User.findOne({ email: email })
+        if (returnedemail) {
+            return res.status(400).json({ message: 'Email aready exists!'})
+        }
         const user = new User(req.body)
         await user.save()
         res.json({message: 'User created succesfully!'})
